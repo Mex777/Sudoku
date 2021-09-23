@@ -27,10 +27,15 @@ body {
 }
 
 button {
-  background-color: green;
+  background-color: #43b07d;
   padding: 1rem;
   border-radius: 5px;
   font-size: 40px;
   color: white;
-  /* background-color: rgba(128, 128, 128, 0.678); */
+}
+
+h1 {
+  text-align: center;
+  grid-column-start: 1;
+  grid-column-end: 4;
 }

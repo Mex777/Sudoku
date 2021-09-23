@@ -9,7 +9,7 @@ const solution = [
   [1, 5, 4, 7, 9, 6, 8, 2, 3],
   [2, 3, 9, 8, 4, 1, 5, 6, 7],
 ];
-const userTable = solution;
+const userTable = [[], [], [], [], [], [], [], [], []];
 let selectedI = -1;
 let selectedJ = -1;
 
@@ -17,13 +17,19 @@ let selectedJ = -1;
  * 
  */
 function createUserTable() {
+  for (let i = 0; i < 9; ++i) {
+    for (let j = 0; j < 9; ++j) {
+      userTable[i][j] = solution[i][j];
+    }
+  }
+
   let missingCells = 27;
   while (missingCells > 0) {
     const randI = Math.floor(Math.random() * 9);
     const randJ = Math.floor(Math.random() * 9);
 
-    if (userTable[randI][randJ] != '') {
-      userTable[randI][randJ] = '';
+    if (userTable[randI][randJ] !== 0) {
+      userTable[randI][randJ] = 0;
       --missingCells;
     }
   }
@@ -38,25 +44,29 @@ function drawTable() {
   for (let i = 0; i < 9; ++i) {
     for (let j = 0; j < 9; ++j) {
       const el = document.createElement('div');
+
       el.id = '' + i + j;
-      el.innerHTML = userTable[i][j];
+      if (userTable[i][j] !== 0) {
+        el.innerHTML = userTable[i][j];
+      }
       el.className = 'cell';
       el.style.gridRowStart = i + 1;
       el.style.gridColumnStart = j + 1;
-      if (userTable[i][j] == '') {
-        el.style.backgroundColor = 'rgba(128, 128, 128, 0.678)';
+      if (userTable[i][j] === 0) {
+        el.style.backgroundColor = '#a8bdbc';
       }
       el.addEventListener('click', function() {
-        if (userTable[i][j] == '') {
+        if (userTable[i][j] == 0) {
           if (selectedI !== -1 && selectedJ !== -1) {
             document.getElementById('' + selectedI + selectedJ)
-                .style.backgroundColor = 'rgba(128, 128, 128, 0.678)';
+                .style.backgroundColor = '#a8bdbc';
           }
-          el.style.backgroundColor = 'red';
+          el.style.backgroundColor = '#e63535';
           selectedI = i;
           selectedJ = j;
         }
       });
+
       document.getElementById('mt').appendChild(el);
     }
   }
@@ -70,23 +80,66 @@ function drawChoiceButtons() {
   for (let i = 1; i <= 3; ++i) {
     for (let j = 3; j >= 1; --j) {
       const el = document.createElement('button');
+
       el.innerHTML = numberToShow;
       el.style.gridRowStart = i;
       el.style.gridColumnStart = j;
       el.id = numberToShow;
+      el.addEventListener('click', function() {
+        if (selectedI != -1 && selectedJ != -1) {
+          userTable[selectedI][selectedJ] = el.id;
+          document.getElementById('' + selectedI + selectedJ)
+              .innerHTML = el.id;
+        }
+      });
+
       document.getElementById('choices').appendChild(el);
       --numberToShow;
     }
   }
+}
 
+/**
+ * 
+ */
+function drawCheckSolution() {
   const el = document.createElement('button');
+
   el.style.gridColumnStart = 1;
   el.style.gridColumnEnd = 4;
   el.style.gridRowStart = 4;
   el.innerHTML = 'CHECK SOLUTION';
-  el.style.backgroundColor = 'red';
+  el.style.backgroundColor = '#e63535';
+
+  el.addEventListener('click', function() {
+    if (checkUserSolution() == true) {
+      document.getElementById('outcome').innerHTML = 'CORRECT SOLUTION';
+      document.getElementById('outcome').style.color = '#43b07d';
+    } else {
+      document.getElementById('outcome').innerHTML = 'WRONG SOLUTION';
+      document.getElementById('outcome').style.color = '#e63535';
+    }
+  });
+
   document.getElementById('choices').appendChild(el);
+}
+
+/**
+ * 
+ * @returns 
+ */
+function checkUserSolution() {
+  for (let i = 0; i < 9; ++i) {
+    for (let j = 0; j < 9; ++j) {
+      if (solution[i][j] != userTable[i][j]) {
+        return false;
+      }
+    }
+  }
+
+  return true;
 }
 
 drawTable();
 drawChoiceButtons();
+drawCheckSolution();
