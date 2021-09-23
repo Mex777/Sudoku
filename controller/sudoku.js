@@ -14,7 +14,7 @@ let selectedI = -1;
 let selectedJ = -1;
 
 /**
- * 
+ * creates the table that the user interacts with
  */
 function createUserTable() {
   for (let i = 0; i < 9; ++i) {
@@ -36,7 +36,7 @@ function createUserTable() {
 }
 
 /**
- * 
+ * shows the table on the screen
  */
 function drawTable() {
   createUserTable();
@@ -55,6 +55,8 @@ function drawTable() {
       if (userTable[i][j] === 0) {
         el.style.backgroundColor = '#a8bdbc';
       }
+
+      // selects the cell where the user clicked
       el.addEventListener('click', function() {
         if (userTable[i][j] == 0) {
           if (selectedI !== -1 && selectedJ !== -1) {
@@ -73,7 +75,7 @@ function drawTable() {
 }
 
 /**
- * 
+ * the buttons the user interacts with in order to make a move on the screen
  */
 function drawChoiceButtons() {
   let numberToShow = 9;
@@ -85,6 +87,8 @@ function drawChoiceButtons() {
       el.style.gridRowStart = i;
       el.style.gridColumnStart = j;
       el.id = numberToShow;
+
+      // updates the selected cell with the number pressed on the screen.
       el.addEventListener('click', function() {
         if (selectedI != -1 && selectedJ != -1) {
           userTable[selectedI][selectedJ] = el.id;
@@ -100,7 +104,8 @@ function drawChoiceButtons() {
 }
 
 /**
- * 
+ * makes a button which checks whether
+ *  the current state of table is the correct solution
  */
 function drawCheckSolution() {
   const el = document.createElement('button');
@@ -125,8 +130,9 @@ function drawCheckSolution() {
 }
 
 /**
- * 
- * @returns 
+ * Checks if the user's table is the same with the correct solution
+ * @return {boolean} true if the user's table is the same with the solution
+ *  false otherwise
  */
 function checkUserSolution() {
   for (let i = 0; i < 9; ++i) {
